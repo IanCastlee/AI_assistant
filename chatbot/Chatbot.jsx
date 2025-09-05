@@ -34,6 +34,7 @@ function Chatbot() {
   const [messages, setMessages] = useState([initialMessage]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [sending, setSending] = useState(false); // <-- Added to prevent multiple sends
   const messagesEndRef = useRef(null);
   const [confirmationModal, setConfirmationModal] = useState(false);
   const { toggleTheme, theme } = useContext(DarkModeContext);
@@ -43,9 +44,11 @@ function Chatbot() {
   }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (isTyping || !input.trim()) return;
+    if (sending || isTyping || !input.trim()) return; // <-- Prevent multiple sends or empty input
 
+    setSending(true); // <-- Lock sending while processing
     setMessages((prev) => [...prev, { role: "user", text: input }]);
+    const currentInput = input;
     setInput("");
     setIsTyping(true);
 
@@ -89,7 +92,7 @@ Tone and rules:
         )
         .join("\n");
 
-      const prompt = `${conversation}\nUser: ${input}\nAssistant:`;
+      const prompt = `${conversation}\nUser: ${currentInput}\nAssistant:`;
 
       const result = await textModel.generateContent(prompt);
       const aiResponse = result.response.text();
@@ -101,6 +104,7 @@ Tone and rules:
       if (error.message.includes("429")) {
         if (currentKeyIndex < apiKeys.length - 1) {
           currentKeyIndex++;
+          setSending(false);
           return handleSend();
         } else {
           setMessages((prev) => [
@@ -123,6 +127,7 @@ Tone and rules:
     }
 
     setIsTyping(false);
+    setSending(false); // <-- Unlock sending after done
   };
 
   const handleRefresh = () => {
@@ -174,7 +179,7 @@ Tone and rules:
             <div className="chat-message-wrapper ai">
               <div className="ai-profile">
                 <img className="ai-image" src={ppImage} alt="ai" />
-                <span>Ian's Assistant</span>
+                <span>Paubra's Assistant</span>
               </div>
               <div className="chat-message ai typing">
                 <div className="dot-typing">
@@ -197,8 +202,12 @@ Tone and rules:
               placeholder="Ask something..."
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              disabled={sending} // Disable input while sending
             />
-            <RiSendPlane2Fill onClick={handleSend} className="sendIcon" />
+            <RiSendPlane2Fill
+              onClick={handleSend}
+              className={`sendIcon ${sending ? "disabled" : ""}`}
+            />
           </div>
         </div>
 
