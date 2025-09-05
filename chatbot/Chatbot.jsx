@@ -166,7 +166,6 @@ Tone and rules:
               {msg.role === "ai" && (
                 <div className="ai-profile">
                   <img className="ai-image" src={ppImage} alt="ai" />
-                  <span>Ian's Assistant</span>
                 </div>
               )}
               <div className={`chat-message ${msg.role}`}>

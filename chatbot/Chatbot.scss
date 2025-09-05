@@ -422,7 +422,7 @@
           max-width: 80%;
           padding: 10px 14px;
           border-radius: 15px;
-          font-size: 12px;
+          font-size: 14px;
           line-height: 1.4;
           word-wrap: break-word;
 
@@ -432,18 +432,7 @@
             color: #fff;
             border-bottom-right-radius: 4px;
             margin-top: 10px;
-            padding: 10px;
-
-            &:has(.chat-image) {
-              padding: 0;
-              background-color: var(--mian-bg-color);
-            }
-
-            .chat-image {
-              max-width: 200px;
-              height: auto;
-              border-radius: 10px;
-            }
+            font-size: 14px;
           }
 
           &.ai {
@@ -451,6 +440,7 @@
             background: var(--chat-card);
             color: #f1f1f1;
             border-bottom-left-radius: 4px;
+            font-size: 14px;
           }
 
           &.typing {
