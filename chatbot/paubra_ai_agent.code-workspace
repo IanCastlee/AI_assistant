@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"name": "paubra_ai_agent",
+		"path": ".."
+	},
+	{
+		"name": "context",
+		"path": "../../orig_portfolio/src/context"
+	}
+],
+  "settings": {}
+}

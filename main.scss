@@ -1,0 +1,33 @@
+:root {
+  --mian-bg-color: rgb(240, 233, 233);
+  --card-bg-color: #f8f5f5;
+  --border-color: rgb(255, 255, 255);
+
+  --primary-text-color: #181c14;
+  --secondary-text-color: rgb(49, 45, 45);
+  --dark-text-color: rgb(73, 71, 71);
+  --button: green;
+}
+
+[data-theme="dark"] {
+  --mian-bg-color: #000000;
+  --card-bg-color: #1a1a1d;
+  --border-color: #222225;
+  --chat-card: rgb(49, 45, 45);
+
+  --primary-text-color: #ffcfef;
+  --secondary-text-color: #ffcfef;
+  --dark-text-color: gray;
+  --button: green;
+}
+[data-theme="light"] {
+  --mian-bg-color: rgb(240, 233, 233);
+  --card-bg-color: #f8f5f5;
+  --border-color: rgb(255, 255, 255);
+  --chat-card: rgb(51, 48, 48);
+
+  --primary-text-color: #000;
+  --secondary-text-color: rgb(49, 45, 45);
+  --dark-text-color: rgb(73, 71, 71);
+  --button: green;
+}
