@@ -31,22 +31,33 @@ function Chatbot() {
     text: `Hi! I'm the assistant of PAUBRA. Do you have any questions about the app? Are you interested in becoming a worker or a provider? Feel free to ask, and I'll do my best to help you.`,
   };
 
-  const [messages, setMessages] = useState([initialMessage]);
+  // Load messages from localStorage if available
+  const [messages, setMessages] = useState(() => {
+    const storedMessages = localStorage.getItem("paubra-chat-messages");
+    return storedMessages ? JSON.parse(storedMessages) : [initialMessage];
+  });
+
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [sending, setSending] = useState(false); // <-- Added to prevent multiple sends
+  const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
   const [confirmationModal, setConfirmationModal] = useState(false);
   const { toggleTheme, theme } = useContext(DarkModeContext);
 
+  // Sync messages to localStorage on update
+  useEffect(() => {
+    localStorage.setItem("paubra-chat-messages", JSON.stringify(messages));
+  }, [messages]);
+
+  // Scroll to bottom on message update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
   const handleSend = async () => {
-    if (sending || isTyping || !input.trim()) return; // <-- Prevent multiple sends or empty input
+    if (sending || isTyping || !input.trim()) return;
 
-    setSending(true); // <-- Lock sending while processing
+    setSending(true);
     setMessages((prev) => [...prev, { role: "user", text: input }]);
     const currentInput = input;
     setInput("");
@@ -83,7 +94,6 @@ Tone and rules:
 3. Do not invent features or information that aren’t officially part of the PAUBRA platform.
 4. Never share personal opinions or unverified claims about the business.
 5. If the user asks in **Tagalog**, respond in **Tagalog**.
-
 `,
       });
 
@@ -128,10 +138,12 @@ Tone and rules:
     }
 
     setIsTyping(false);
-    setSending(false); // <-- Unlock sending after done
+    setSending(false);
   };
 
+  // Clear messages and localStorage
   const handleRefresh = () => {
+    localStorage.removeItem("paubra-chat-messages");
     setMessages([initialMessage]);
     setInput("");
     setConfirmationModal(false);
@@ -145,7 +157,6 @@ Tone and rules:
             <img src={ppImage} alt="profile" />
             <span>Paubra AI Assistant</span>
           </div>
-
           <div className="right">
             <div className="togglebutton-wrapper" onClick={toggleTheme}>
               {theme === "light" ? (
@@ -202,7 +213,7 @@ Tone and rules:
               placeholder="Ask something..."
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              disabled={sending} // Disable input while sending
+              disabled={sending}
             />
             <RiSendPlane2Fill
               onClick={handleSend}
